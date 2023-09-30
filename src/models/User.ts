@@ -1,13 +1,13 @@
 // **** Variables **** //
 
-const INVALID_CONSTRUCTOR_PARAM = 'nameOrObj arg must a string or an ' + 
-  'object with the appropriate user keys.';
+const INVALID_CONSTRUCTOR_PARAM =
+  "nameOrObj arg must a string or an " +
+  "object with the appropriate user keys.";
 
 export enum UserRoles {
   Standard,
   Admin,
 }
-
 
 // **** Types **** //
 
@@ -19,13 +19,25 @@ export interface IUser {
   role?: UserRoles;
 }
 
-export interface ISessionUser {
-  id: number;
-  email: string;
+export interface UserDTO {
   name: string;
-  role: IUser['role'];
+  email: string;
+  role: UserRoles;
+  password: string;
+}
+export interface UserUpdateDTO {
+  id: number;
+  name?: string;
+  email?: string;
+  role?: UserRoles;
 }
 
+export interface ISessionUser {
+  id: string;
+  email: string;
+  name: string;
+  role: IUser["role"];
+}
 
 // **** Functions **** //
 
@@ -37,14 +49,14 @@ function new_(
   email?: string,
   role?: UserRoles,
   pwdHash?: string,
-  id?: number, // id last cause usually set by db
+  id?: number // id last cause usually set by db
 ): IUser {
   return {
-    id: (id ?? -1),
-    name: (name ?? ''),
-    email: (email ?? ''),
-    role: (role ?? UserRoles.Standard),
-    pwdHash: (pwdHash ?? ''),
+    id: id ?? -1,
+    name: name ?? "",
+    email: email ?? "",
+    role: role ?? UserRoles.Standard,
+    pwdHash: pwdHash ?? "",
   };
 }
 
@@ -67,14 +79,21 @@ function from(param: object): IUser {
 function isUser(arg: unknown): boolean {
   return (
     !!arg &&
-    typeof arg === 'object' &&
-    'id' in arg &&
-    'email' in arg &&
-    'name' in arg &&
-    'role' in arg
+    typeof arg === "object" &&
+    "email" in arg &&
+    "name" in arg &&
+    "role" in arg
   );
 }
 
+function isEmail(arg: unknown): boolean {
+  if (typeof arg !== "string") {
+    return false; // Email must be a string
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(arg);
+}
 
 // **** Export default **** //
 
@@ -82,4 +101,5 @@ export default {
   new: new_,
   from,
   isUser,
+  isEmail,
 } as const;
