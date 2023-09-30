@@ -20,6 +20,7 @@ import HttpStatusCodes from "@src/constants/HttpStatusCodes";
 import { NodeEnvs } from "@src/constants/misc";
 import { RouteError } from "@src/other/classes";
 import { myDataSource } from "@src/app-data-source";
+import { User } from "./entity/user.entity";
 
 // **** establish database connection **** //
 
@@ -55,6 +56,11 @@ if (EnvVars.NodeEnv === NodeEnvs.Production.valueOf()) {
 
 // Add APIs, must be after middleware
 app.use(Paths.Base, BaseRouter);
+
+app.get("/users", async function (req: Request, res: Response) {
+  const users = await myDataSource.getRepository(User).find();
+  res.json(users);
+});
 
 // Add error handler
 app.use(
