@@ -1,9 +1,8 @@
-import dotenv from 'dotenv';
-import find from 'find';
-import Jasmine from 'jasmine';
-import { parse } from 'ts-command-line-args';
-import logger from 'jet-logger';
-
+import dotenv from "dotenv";
+import find from "find";
+import Jasmine from "jasmine";
+import { parse } from "ts-command-line-args";
+import logger from "jet-logger";
 
 // **** Types **** //
 
@@ -11,27 +10,25 @@ interface IArgs {
   testFile: string;
 }
 
-
 // **** Setup **** //
 
 // ** Init ** //
 
 // NOTE: MUST BE FIRST!! Load env vars
 const result2 = dotenv.config({
-  path: './env/test.env',
+  path: "./env/test.env",
 });
 if (result2.error) {
   throw result2.error;
 }
 
-// Setup command line options. 
+// Setup command line options.
 const args = parse<IArgs>({
   testFile: {
     type: String,
-    defaultValue: '',
+    defaultValue: "",
   },
 });
-
 
 // ** Start Jasmine ** //
 
@@ -42,22 +39,42 @@ jasmine.exitOnCompletion = false;
 // Set location of test files
 jasmine.loadConfig({
   random: true,
-  spec_dir: 'spec',
-  spec_files: [
-    './tests/**/*.spec.ts',
-  ],
+  spec_dir: "spec",
+  spec_files: ["./tests/**/*.spec.ts"],
   stopSpecOnExpectationFailure: false,
 });
+
+// Custom reporter to log each test as they run
+const customReporter: jasmine.CustomReporter = {
+  specStarted(result) {
+    logger.info(`Started: ${result.fullName}`);
+  },
+  specDone(result) {
+    if (result.status === "failed") {
+      logger.err(`Failed: ${result.fullName}`);
+      if (result.failedExpectations.length > 0) {
+        result.failedExpectations.forEach((failure) => {
+          logger.err(`  - ${failure.message}`);
+        });
+      }
+    } else {
+      logger.info(`Passed: ${result.fullName}`);
+    }
+  },
+};
+
+// Add the custom reporter to Jasmine
+jasmine.addReporter(customReporter);
 
 // Run all or a single unit-test
 let execResp: Promise<jasmine.JasmineDoneInfo> | undefined;
 if (args.testFile) {
   const testFile = args.testFile;
-  find.file(testFile + '.spec.ts', './spec', (files: string[]) => {
+  find.file(testFile + ".spec.ts", "./spec", (files: string[]) => {
     if (files.length === 1) {
       jasmine.execute([files[0]]);
     } else {
-      logger.err('Test file not found!');
+      logger.err("Test file not found!");
     }
   });
 } else {
@@ -68,10 +85,10 @@ if (args.testFile) {
 (async () => {
   if (!!execResp) {
     const info = await execResp;
-    if (info.overallStatus === 'passed') {
-      logger.info('All tests have passed :)');
+    if (info.overallStatus === "passed") {
+      logger.info("All tests have passed :)");
     } else {
-      logger.err('At least one test has failed :(');
+      logger.err("At least one test has failed :(");
     }
   }
 })();
