@@ -1,5 +1,7 @@
 // **** Variables **** //
 
+import { User } from "@src/entity/user.entity";
+
 const INVALID_CONSTRUCTOR_PARAM =
   "nameOrObj arg must a string or an " +
   "object with the appropriate user keys.";
@@ -50,13 +52,13 @@ function new_(
   role?: UserRoles,
   pwdHash?: string,
   id?: number // id last cause usually set by db
-): IUser {
+): User {
   return {
     id: id ?? -1,
     name: name ?? "",
     email: email ?? "",
     role: role ?? UserRoles.Standard,
-    pwdHash: pwdHash ?? "",
+    password: pwdHash ?? "",
   };
 }
 
