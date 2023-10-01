@@ -3,6 +3,7 @@ import HttpStatusCodes from "@src/constants/HttpStatusCodes";
 import UserService from "@src/services/UserService";
 import { IUser, UserDTO } from "@src/models/User";
 import { IReq, IRes } from "./types/express/misc";
+import { Messages } from "@src/services/AuthService";
 
 // **** Functions **** //
 
@@ -18,14 +19,21 @@ async function getAll(_: IReq, res: IRes) {
  * Add one user.
  */
 async function add(req: IReq<UserDTO>, res: IRes) {
-  const body = req.body;
-  const returnUser = await UserService.addOne(body);
-  return res.status(HttpStatusCodes.CREATED).json({
-    message: "user added successfully",
-    data: {
-      user: returnUser,
-    },
-  });
+  try {
+    const body = req.body;
+    const returnUser = await UserService.addOne(body);
+    return res.status(HttpStatusCodes.CREATED).json({
+      message: Messages.RegisterSuccess,
+      data: {
+        user: returnUser,
+      },
+    });
+  } catch (error) {
+    return res.status(error.status).json({
+      message: error.message,
+      data: null,
+    });
+  }
 }
 
 /**
