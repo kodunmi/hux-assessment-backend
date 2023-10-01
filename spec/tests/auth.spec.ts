@@ -111,13 +111,19 @@ describe("AuthRouter", () => {
     const callApi = (reqBody: TReqBody) =>
       agent.post(Paths.Auth.Register).type("form").send(reqBody);
 
-    console.log("outter", RegDetail);
+    const RegDetail2 = {
+      id: 1,
+      email: `${getRandomInt()}@test.com"`,
+      password: "12345",
+      name: "Lekan kodunmi",
+      role: 0,
+    };
 
     // Success
-    it(`should return a response with a status of "${OK}" and message of ${Messages.RegisterSuccess} `, (done) => {
+    it(`should return a response with a status of "${CREATED}" and message of ${Messages.RegisterSuccess} `, (done) => {
       // Call API
 
-      // spyOn(UserRepo, "add").and.resolveTo(RegDetail);
+      spyOn(UserRepo, "add").and.resolveTo(RegDetail2);
       callApi(RegDetail).end((_: Error, res: Response) => {
         expect(res.status).toBe(CREATED);
         expect(res.body.message).toContain(Messages.RegisterSuccess);
