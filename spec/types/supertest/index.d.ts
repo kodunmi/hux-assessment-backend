@@ -10,6 +10,8 @@ declare module "supertest" {
       data?: {
         user: User;
         token?: string;
+        contacts?: any;
+        contact?: any;
       };
     };
   }
