@@ -12,7 +12,12 @@ async function getOne(req: IReq, res: IRes) {
     const phoneNumber = req.params.phoneNumber;
     const contact = await ContactService.getOne(phoneNumber);
     if (contact) {
-      return res.status(HttpStatusCodes.OK).json({ contact });
+      return res.status(HttpStatusCodes.OK).json({
+        message: "Contact retrieved successfully",
+        data: {
+          contact: contact,
+        },
+      });
     } else {
       return res.status(HttpStatusCodes.NOT_FOUND).json({
         message: "Contact not found",
@@ -33,9 +38,9 @@ async function getAll(_: IReq, res: IRes) {
   try {
     const contacts = await ContactService.getAll();
     return res.status(HttpStatusCodes.OK).json({
-      message: "Contact retrieved successfully",
+      message: "Contacts retrieved successfully",
       data: {
-        contact: contacts,
+        contacts: contacts,
       },
     });
   } catch (error) {
