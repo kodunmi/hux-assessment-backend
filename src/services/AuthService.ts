@@ -16,7 +16,17 @@ export const Errors = {
   EmailNotFound(email: string) {
     return `User with email "${email}" not found`;
   },
+  DuplicateUser: "User with email already exist",
+  DuplicateContact: "Phone number is already saved",
+  ContactNotFound: "No contact with id available",
 } as const;
+
+// Messages
+
+export const Messages = {
+  LoginSuccess: "Login successful",
+  RegisterSuccess: "Registration successful",
+};
 
 // **** Functions **** //
 
