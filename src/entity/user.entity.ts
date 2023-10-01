@@ -19,7 +19,7 @@ export class User {
     enum: UserRoles,
     default: UserRoles.Standard,
   })
-  role: string;
+  role: UserRoles;
 
   @Column()
   password: string;
