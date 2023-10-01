@@ -1,5 +1,5 @@
 import HttpStatusCodes from "@src/constants/HttpStatusCodes";
-import ContactService from "@src/services/ContactService"; // Import the ContactService
+import ContactService, { ContactMessages } from "@src/services/ContactService"; // Import the ContactService
 import { Contact } from "@src/entity/contact.entity"; // Import the Contact entity
 import { IReq, IRes } from "./types/express/misc";
 import { ContactDTO } from "@src/models/Contact"; // Import ContactDTO if needed
@@ -13,14 +13,14 @@ async function getOne(req: IReq, res: IRes) {
     const contact = await ContactService.getOne(phoneNumber);
     if (contact) {
       return res.status(HttpStatusCodes.OK).json({
-        message: "Contact retrieved successfully",
+        message: ContactMessages.Retrieved,
         data: {
           contact: contact,
         },
       });
     } else {
       return res.status(HttpStatusCodes.NOT_FOUND).json({
-        message: "Contact not found",
+        message: ContactMessages.NotFound,
         data: null,
       });
     }
@@ -38,7 +38,7 @@ async function getAll(_: IReq, res: IRes) {
   try {
     const contacts = await ContactService.getAll();
     return res.status(HttpStatusCodes.OK).json({
-      message: "Contacts retrieved successfully",
+      message: ContactMessages.Retrieved,
       data: {
         contacts: contacts,
       },
@@ -61,7 +61,7 @@ async function createOne(req: IReq<ContactDTO>, res: IRes) {
     const body = req.body;
     const returnContact = await ContactService.createOne(body);
     return res.status(HttpStatusCodes.CREATED).json({
-      message: "Contact created successfully",
+      message: ContactMessages.Created,
       data: {
         contact: returnContact,
       },
@@ -82,7 +82,7 @@ async function updateOne(req: IReq<Contact>, res: IRes) {
     const contact = req.body;
     await ContactService.updateOne(contact);
     return res.status(HttpStatusCodes.OK).json({
-      message: "Contact updated successfully",
+      message: ContactMessages.Updated,
       data: null,
     });
   } catch (error) {
@@ -102,12 +102,12 @@ async function deleteOne(req: IReq, res: IRes) {
     const deleted = await ContactService.deleteOne(contactId);
     if (deleted) {
       return res.status(HttpStatusCodes.OK).json({
-        message: "Contact deleted successfully",
+        message: ContactMessages.Deleted,
         data: null,
       });
     } else {
       return res.status(HttpStatusCodes.NOT_FOUND).json({
-        message: "Contact not found",
+        message: ContactMessages.NotFound,
         data: null,
       });
     }
