@@ -1,8 +1,9 @@
 import HttpStatusCodes from "@src/constants/HttpStatusCodes";
 import SessionUtil from "@src/util/SessionUtil";
-import AuthService from "@src/services/AuthService";
+import AuthService, { Messages } from "@src/services/AuthService";
 
 import { IReq, IRes } from "./types/express/misc";
+import { RouteError } from "@src/other/classes";
 
 // **** Types **** //
 
@@ -17,25 +18,35 @@ interface ILoginReq {
  * Login a user.
  */
 async function login(req: IReq<ILoginReq>, res: IRes) {
-  const { email, password } = req.body;
-  // Login
-  const user = await AuthService.login(email, password);
-  // Setup Admin Cookie
+  try {
+    const { email, password } = req.body;
+    // Login
+    const user = await AuthService.login(email, password);
 
-  const token = await SessionUtil.addSessionData(res, {
-    id: user.id,
-    email: user.name,
-    name: user.name,
-    role: user.role,
-  });
-  // Return
-  return res.status(HttpStatusCodes.OK).json({
-    message: "login successful",
-    data: {
-      user: user,
-      token: token,
-    },
-  });
+    // console.log(user);
+
+    // Setup Admin Cookie
+
+    const token = await SessionUtil.addSessionData(res, {
+      id: user.id,
+      email: user.name,
+      name: user.name,
+      role: user.role,
+    });
+    // Return
+    return res.status(HttpStatusCodes.OK).json({
+      message: Messages.LoginSuccess,
+      data: {
+        user: user,
+        token: token,
+      },
+    });
+  } catch (error) {
+    return res.status(error.status).json({
+      message: error.message,
+      data: null,
+    });
+  }
 }
 
 /**
