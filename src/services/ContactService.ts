@@ -5,6 +5,13 @@ import HttpStatusCodes from "@src/constants/HttpStatusCodes";
 
 // Error message
 export const CONTACT_NOT_FOUND_ERR = "Contact not found";
+export const ContactMessages = {
+  Retrieved: "Contacts retrieved successfully",
+  Created: "Contact created successfully",
+  Updated: "Contact updated successfully",
+  Deleted: "Contact deleted successfully",
+  NotFound: "Contact not found",
+};
 
 // Get one contact by email
 async function getOne(phoneNumber: string): Promise<Contact | null> {
@@ -28,12 +35,14 @@ function createOne(body: Partial<Contact>): Promise<Contact> {
 }
 
 // Update a contact
-async function updateOne(contact: Contact): Promise<void> {
+async function updateOne(contact: Contact): Promise<Contact> {
   const exists = await ContactRepo.exists(contact.id);
   if (!exists) {
     throw new RouteError(HttpStatusCodes.NOT_FOUND, CONTACT_NOT_FOUND_ERR);
   }
   await ContactRepo.update(contact.id, contact);
+
+  return (await ContactRepo.getOneById(exists.id)) as Contact;
 }
 
 // Delete a contact by their id
