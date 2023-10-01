@@ -4,6 +4,9 @@ import orm from "./MockOrm";
 import { myDataSource } from "@src/app-data-source";
 import { User } from "@src/entity/user.entity";
 import PwdUtil from "@src/util/PwdUtil";
+import { RouteError } from "@src/other/classes";
+import HttpStatusCodes from "@src/constants/HttpStatusCodes";
+import { Errors } from "@src/services/AuthService";
 
 // **** Functions **** //
 
@@ -46,6 +49,12 @@ async function getAll(): Promise<User[]> {
  * Add one user.
  */
 async function add({ name, email, password }: UserDTO): Promise<User> {
+  let existingUser = await getOne(email);
+
+  if (existingUser) {
+    throw new RouteError(HttpStatusCodes.BAD_REQUEST, Errors.DuplicateUser);
+  }
+
   console.log("password", PwdUtil.getHash(password));
 
   const userObj = myDataSource.getRepository(User).create({
