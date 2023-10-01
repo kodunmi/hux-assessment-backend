@@ -77,7 +77,7 @@ apiRouter.use(Paths.Users.Base, verifyJwt, userRouter);
 const contactRouter = Router();
 
 // Get all contacts
-contactRouter.get(Paths.Contacts.Get, ContactRoutes.getAll);
+contactRouter.get(Paths.Contacts.Get, verifyJwt, ContactRoutes.getAll);
 
 // Add one contact
 contactRouter.post(
