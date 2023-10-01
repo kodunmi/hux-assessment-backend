@@ -22,6 +22,7 @@ async function add(req: IReq<UserDTO>, res: IRes) {
   try {
     const body = req.body;
     const returnUser = await UserService.addOne(body);
+
     return res.status(HttpStatusCodes.CREATED).json({
       message: Messages.RegisterSuccess,
       data: {
