@@ -13,6 +13,15 @@ async function getOne(phoneNumber: string): Promise<Contact | null> {
   return contact;
 }
 
+// Get one contact by id
+async function getOneById(id: number): Promise<Contact | null> {
+  const contact = await myDataSource.getRepository(Contact).findOne({
+    where: { id: id },
+  });
+
+  return contact;
+}
+
 async function exists(id: number): Promise<Contact | null> {
   const contact = await myDataSource.getRepository(Contact).findOne({
     where: { id: id },
@@ -73,4 +82,5 @@ export default {
   update,
   delete: deleteContact,
   exists,
+  getOneById,
 } as const;
