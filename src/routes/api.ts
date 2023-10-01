@@ -6,7 +6,9 @@ import Paths from "../constants/Paths";
 import User from "@src/models/User";
 import AuthRoutes from "./AuthRoutes";
 import UserRoutes from "./UserRoutes";
+import ContactRoutes from "./ContactRoutes"; // Import the ContactRoutes module
 import verifyJwt from "./middleware/protectRoute";
+import { validatePhoneNumber } from "@src/util/misc";
 
 // **** Variables **** //
 
@@ -69,6 +71,37 @@ userRouter.delete(
 
 // Add UserRouter
 apiRouter.use(Paths.Users.Base, verifyJwt, userRouter);
+
+// ** Add ContactRouter ** //
+
+const contactRouter = Router();
+
+// Get all contacts
+contactRouter.get(Paths.Contacts.Get, ContactRoutes.getAll);
+
+// Add one contact
+contactRouter.post(
+  Paths.Contacts.Add,
+  verifyJwt,
+  validate(
+    ["phoneNumber", validatePhoneNumber],
+    ["firstName", "string"],
+    ["lastName", "string"]
+  ),
+  ContactRoutes.createOne
+);
+
+// Update one contact
+contactRouter.put(Paths.Contacts.Update, verifyJwt, ContactRoutes.updateOne);
+
+// Delete one contact
+contactRouter.delete(Paths.Contacts.Delete, verifyJwt, ContactRoutes.deleteOne);
+
+// Get one contact by email
+contactRouter.get(Paths.Contacts.GetOne, verifyJwt, ContactRoutes.getOne);
+
+// Add ContactRouter
+apiRouter.use(Paths.Contacts.Base, contactRouter);
 
 // **** Export default **** //
 
