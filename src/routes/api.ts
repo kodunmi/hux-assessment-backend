@@ -92,13 +92,28 @@ contactRouter.post(
 );
 
 // Update one contact
-contactRouter.put(Paths.Contacts.Update, verifyJwt, ContactRoutes.updateOne);
+contactRouter.put(
+  Paths.Contacts.Update,
+  verifyJwt,
+  validate(["id", "number", "params"]),
+  ContactRoutes.updateOne
+);
 
 // Delete one contact
-contactRouter.delete(Paths.Contacts.Delete, verifyJwt, ContactRoutes.deleteOne);
+contactRouter.delete(
+  Paths.Contacts.Delete,
+  verifyJwt,
+  validate(["id", "number", "params"]),
+  ContactRoutes.deleteOne
+);
 
 // Get one contact by email
-contactRouter.get(Paths.Contacts.GetOne, verifyJwt, ContactRoutes.getOne);
+contactRouter.get(
+  Paths.Contacts.GetOne,
+  verifyJwt,
+  validate(["phoneNumber", validatePhoneNumber, "params"]),
+  ContactRoutes.getOne
+);
 
 // Add ContactRouter
 apiRouter.use(Paths.Contacts.Base, contactRouter);
