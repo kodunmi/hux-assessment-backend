@@ -21,6 +21,7 @@ import { NodeEnvs } from "@src/constants/misc";
 import { RouteError } from "@src/other/classes";
 import { myDataSource } from "@src/app-data-source";
 import { User } from "./entity/user.entity";
+import cors from "cors";
 
 // **** establish database connection **** //
 
@@ -43,6 +44,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(EnvVars.CookieProps.Secret));
+app.use(cors());
 
 // Show routes called in console during development
 if (EnvVars.NodeEnv === NodeEnvs.Dev.valueOf()) {
