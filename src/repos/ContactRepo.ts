@@ -32,7 +32,12 @@ async function exists(id: number): Promise<Contact | null> {
 
 // Get all contacts
 async function getAll(): Promise<Contact[]> {
-  const contacts = await myDataSource.getRepository(Contact).find();
+  const contacts = await myDataSource.getRepository(Contact).find({
+    order: {
+      createdAt: "DESC",
+      // id: "DESC",
+    },
+  });
 
   return contacts;
 }
