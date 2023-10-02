@@ -10,6 +10,27 @@ import ContactRoutes from "./ContactRoutes"; // Import the ContactRoutes module
 import verifyJwt from "./middleware/protectRoute";
 import { validatePhoneNumber } from "@src/util/misc";
 
+// Import Swagger JSDoc for annotations
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
+
+// Define Swagger options
+const swaggerOptions = {
+  definition: {
+    swagger: "2.0", // Specify the OpenAPI version
+    components: {}, // ADD THIS LINE!!!
+    info: {
+      title: "Your API Documentation",
+      version: "1.0.0",
+    },
+  },
+  // Specify the paths to your route files for Swagger annotations
+  apis: ["src/routes/*.ts"],
+};
+
+// Initialize Swagger
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
 // **** Variables **** //
 
 const apiRouter = Router(),
@@ -117,6 +138,9 @@ contactRouter.get(
 
 // Add ContactRouter
 apiRouter.use(Paths.Contacts.Base, contactRouter);
+
+// Add the Swagger documentation route
+apiRouter.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // **** Export default **** //
 

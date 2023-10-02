@@ -18,6 +18,64 @@ async function getAll(_: IReq, res: IRes) {
 /**
  * Add one user.
  */
+
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a user.
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: Login request body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Registration successful.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Registration successful.
+ *       400:
+ *         description: User with email already exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: User with email already exist.
+ */
+
 async function add(req: IReq<UserDTO>, res: IRes) {
   try {
     const body = req.body;
